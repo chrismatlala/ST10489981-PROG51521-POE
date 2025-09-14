@@ -1,4 +1,4 @@
-package loginsystempoe;
+package userauthenticationsystem;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Scanner;
-import loginsystempoe.UserAuthenticationSystem;
+import userauthenticationsystem.UserAuthenticationSystem;
 
 public class UserAuthenticationSystemTest {
     private UserAuthenticationSystem authSystem = new UserAuthenticationSystem();
