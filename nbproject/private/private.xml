@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/loginsystempoe/Message.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/loginsystempoe/LoginSystemPOE.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/UserAuthenticationSystemTest.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/UserAuthenticationSystem.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/ResponseTest.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/MessageTest.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/Response.java</file>
         </group>
     </open-files>
 </project-private>

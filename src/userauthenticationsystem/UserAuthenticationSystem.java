@@ -10,9 +10,19 @@ public class UserAuthenticationSystem {
     private String firstName;
     private String lastName;
 
+
+    // Constructor
+    public UserAuthenticationSystem(String firstName, String lastName, String userName, String password, String cellNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
+        this.cellNumber = cellNumber;
+    }
+
     // Main method to run the program
     public static void main(String[] args) {
-        UserAuthenticationSystem authSystem = new UserAuthenticationSystem();
+        UserAuthenticationSystem authSystem = new UserAuthenticationSystem();  // uses default constructor
         Scanner inputScanner = new Scanner(System.in);
 
         System.out.println("=== User Registration ===");
@@ -56,10 +66,10 @@ public class UserAuthenticationSystem {
     public String registerNewUser(Scanner inputScanner) {
         System.out.print("Enter your first name: ");
         this.firstName = inputScanner.nextLine();
+
         System.out.print("Enter your last name: ");
         this.lastName = inputScanner.nextLine();
 
-        // Username validation
         System.out.print("Enter username (must contain _ and be ≤5 characters): ");
         String username = inputScanner.nextLine();
         if (!validateUsernameFormat(username)) {
@@ -67,7 +77,6 @@ public class UserAuthenticationSystem {
         }
         this.userName = username;
 
-        // Password validation
         System.out.print("Enter password (≥8 chars, with capital, number, special char): ");
         String password = inputScanner.nextLine();
         if (!validatePasswordComplexity(password)) {
@@ -75,7 +84,6 @@ public class UserAuthenticationSystem {
         }
         this.password = password;
 
-        // Cell number validation
         System.out.print("Enter cell phone number (with international code, e.g., +27831234567): ");
         String cellNumber = inputScanner.nextLine();
         if (!validatePhoneNumberFormat(cellNumber)) {
