@@ -12,7 +12,7 @@ public class UserAuthenticationSystemTest {
     private UserAuthenticationSystem authSystem = new UserAuthenticationSystem();
 
     @Test
-    public void testValidateUsernameFormat() {
+    public void CheckUsernameFormat() {
         // Correct format
         assertTrue(authSystem.validateUsernameFormat("kyl_1"));
         assertTrue(authSystem.validateUsernameFormat("a_b"));
@@ -24,7 +24,7 @@ public class UserAuthenticationSystemTest {
     }
 
     @Test
-    public void testValidatePasswordComplexity() {
+    public void CheckPasswordComplexity() {
         // Correct passwords
         assertTrue(authSystem.validatePasswordComplexity("Ch&&sec@ke99!"));
         assertTrue(authSystem.validatePasswordComplexity("A1@bcdefg"));
@@ -37,7 +37,7 @@ public class UserAuthenticationSystemTest {
     }
 
     @Test
-    public void testValidatePhoneNumberFormat() {
+    public void checkPhoneNumberFormat() {
         // Correct formats
         assertTrue(authSystem.validatePhoneNumberFormat("+27831234567"));
         assertTrue(authSystem.validatePhoneNumberFormat("+1234567890"));
