@@ -66,11 +66,11 @@ public class UserAuthenticationSystemTest {
 
     @Test
     public void testGetLoginStatusMessage() {
-        setPrivateField(authSystem, "firstName", "John");
-        setPrivateField(authSystem, "lastName", "Doe");
+        setPrivateField(authSystem, "firstName", "Kyle");
+        setPrivateField(authSystem, "lastName", "");
         
         // Successful login message
-        assertEquals("Welcome John, Doe it is great to see you again.", 
+        assertEquals("Welcome Kyle, it is great to see you again.", 
                     authSystem.getLoginStatusMessage(true));
         
         // Failed login message
@@ -81,7 +81,7 @@ public class UserAuthenticationSystemTest {
     @Test
     public void testRegisterNewUser() {
         // Simulate user input
-        String simulatedInput = "John\nDoe\ntest_1\nP@ssw0rd123!\n+27831234567\n";
+        String simulatedInput = "Kyle\ntest_1\nP@ssw0rd123!\n+27831234567\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         Scanner testScanner = new Scanner(inputStream);
         
@@ -94,7 +94,7 @@ public class UserAuthenticationSystemTest {
         assertEquals("P@ssw0rd123!", getPrivateField(authSystem, "password"));
         assertEquals("+27831234567", getPrivateField(authSystem, "cellNumber"));
         assertEquals("John", getPrivateField(authSystem, "firstName"));
-        assertEquals("Doe", getPrivateField(authSystem, "lastName"));
+        assertEquals("", getPrivateField(authSystem, "lastName"));
     }
 
     // Helper method to set private fields using reflection

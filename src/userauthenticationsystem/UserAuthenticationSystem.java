@@ -9,6 +9,15 @@ public class UserAuthenticationSystem {
     private String cellNumber;
     private String firstName;
     private String lastName;
+    
+    //Default Constructor
+    public UserAuthenticationSystem(){
+        this.firstName = "";
+        this.lastName = "";
+        this.cellNumber = "";
+        this.userName = "";
+        this.password = "";
+    }
 
 
     // Constructor
@@ -42,6 +51,7 @@ public class UserAuthenticationSystem {
 
         inputScanner.close();
     }
+
 
     // Check if username meets requirements
     public boolean validateUsernameFormat(String username) {
