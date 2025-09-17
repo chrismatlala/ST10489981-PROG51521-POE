@@ -1,63 +1,18 @@
+
 package userauthenticationsystem;
+
 
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class UserAuthenticationSystem {
+public class Login {
     private String userName;
     private String password;
     private String cellNumber;
     private String firstName;
     private String lastName;
     
-    //Default Constructor
-    public UserAuthenticationSystem(){
-        this.firstName = "";
-        this.lastName = "";
-        this.cellNumber = "";
-        this.userName = "";
-        this.password = "";
-    }
-
-
-    // Constructor
-    public UserAuthenticationSystem(String firstName, String lastName, String userName, String password, String cellNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.cellNumber = cellNumber;
-    }
-
-    // Main method to run the program
-    public static void main(String[] args) {
-        UserAuthenticationSystem authSystem = new UserAuthenticationSystem();  // uses default constructor
-        Scanner inputScanner = new Scanner(System.in);
-
-        System.out.println("=== User Registration ===");
-        String registrationResult = authSystem.registerNewUser(inputScanner);
-        System.out.println(registrationResult);
-
-        if (registrationResult.toLowerCase().contains("successful")) {
-            System.out.println("\n=== User Login ===");
-            
-            //Enter user name
-            System.out.print("Enter username: ");
-            String enteredUsername = inputScanner.nextLine();
-            
-            //Enter password
-            System.out.print("Enter password: ");
-            String enteredPassword = inputScanner.nextLine();
-
-            boolean loginSuccess = authSystem.authenticateUser(enteredUsername, enteredPassword);
-            System.out.println(authSystem.getLoginStatusMessage(loginSuccess));
-        }
-
-        inputScanner.close();
-    }
-
-
-    // Check if username meets requirements
+   // Check if username meets requirements
     public boolean checkUsernameFormat(String username) {
         return username.length() <= 5 && username.contains("_");
     }

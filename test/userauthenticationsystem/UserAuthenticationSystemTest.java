@@ -14,39 +14,39 @@ public class UserAuthenticationSystemTest {
     @Test
     public void CheckUsernameFormat() {
         // Correct format of the username
-        assertTrue(authSystem.validateUsernameFormat("kyl_1"));
-        assertTrue(authSystem.validateUsernameFormat("a_b"));
+        assertTrue(authSystem.checkUsernameFormat("kyl_1"));
+        assertTrue(authSystem.checkUsernameFormat("a_b"));
         
         // Incorrect format of the username
-        assertFalse(authSystem.validateUsernameFormat("kyle!!!!!!!"));
-        assertFalse(authSystem.validateUsernameFormat("kyle"));
-        assertFalse(authSystem.validateUsernameFormat("ky le"));
+        assertFalse(authSystem.checkUsernameFormat("kyle!!!!!!!"));
+        assertFalse(authSystem.checkUsernameFormat("kyle"));
+        assertFalse(authSystem.checkUsernameFormat("ky le"));
     }
 
     @Test
     public void CheckPasswordComplexity() {
         // Correct passwords
-        assertTrue(authSystem.validatePasswordComplexity("Ch&&sec@ke99!"));
-        assertTrue(authSystem.validatePasswordComplexity("A1@bcdefg"));
+        assertTrue(authSystem.checkPasswordComplexity("Ch&&sec@ke99!"));
+        assertTrue(authSystem.checkPasswordComplexity("A1@bcdefg"));
         
         // Incorrect passwords
-        assertFalse(authSystem.validatePasswordComplexity("password"));  // No caps, numbers, special chars
-        assertFalse(authSystem.validatePasswordComplexity("Password"));  // No numbers or special chars
-        assertFalse(authSystem.validatePasswordComplexity("P@ssw0r"));   // Too short
-        assertFalse(authSystem.validatePasswordComplexity("password123")); // No caps or special chars
+        assertFalse(authSystem.checkPasswordComplexity("password"));  // No caps, numbers, special chars
+        assertFalse(authSystem.checkPasswordComplexity("Password"));  // No numbers or special chars
+        assertFalse(authSystem.checkPasswordComplexity("P@ssw0r"));   // Too short
+        assertFalse(authSystem.checkPasswordComplexity("password123")); // No caps or special chars
     }
 
     @Test
-    public void checkPhoneNumberFormat() {
+    public void checkCellPhoneNumberFormat() {
         // Correct formats of the phone number
-        assertTrue(authSystem.validatePhoneNumberFormat("+27831234567"));
-        assertTrue(authSystem.validatePhoneNumberFormat("+1234567890"));
+        assertTrue(authSystem.checkCellPhoneNumberFormat("+27831234567"));
+        assertTrue(authSystem.checkCellPhoneNumberFormat("+1234567890"));
         
         // Incorrect formats of the phone number
-        assertFalse(authSystem.validatePhoneNumberFormat("08966553"));     // No international code
-        assertFalse(authSystem.validatePhoneNumberFormat("+123456"));      // Too short
-        assertFalse(authSystem.validatePhoneNumberFormat("27831234567"));  // Missing +
-        assertFalse(authSystem.validatePhoneNumberFormat("+abc1234567"));  // Contains letters
+        assertFalse(authSystem.checkCellPhoneNumberFormat("08966553"));     // No international code
+        assertFalse(authSystem.checkCellPhoneNumberFormat("+123456"));      // Too short
+        assertFalse(authSystem.checkCellPhoneNumberFormat("27831234567"));  // Missing +
+        assertFalse(authSystem.checkCellPhoneNumberFormat("+abc1234567"));  // Contains letters
     }
 
     @Test
