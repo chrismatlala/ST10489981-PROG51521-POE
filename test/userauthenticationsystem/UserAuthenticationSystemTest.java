@@ -13,11 +13,11 @@ public class UserAuthenticationSystemTest {
 
     @Test
     public void CheckUsernameFormat() {
-        // Correct format
+        // Correct format of the username
         assertTrue(authSystem.validateUsernameFormat("kyl_1"));
         assertTrue(authSystem.validateUsernameFormat("a_b"));
         
-        // Incorrect format
+        // Incorrect format of the username
         assertFalse(authSystem.validateUsernameFormat("kyle!!!!!!!"));
         assertFalse(authSystem.validateUsernameFormat("kyle"));
         assertFalse(authSystem.validateUsernameFormat("ky le"));
@@ -38,11 +38,11 @@ public class UserAuthenticationSystemTest {
 
     @Test
     public void checkPhoneNumberFormat() {
-        // Correct formats
+        // Correct formats of the phone number
         assertTrue(authSystem.validatePhoneNumberFormat("+27831234567"));
         assertTrue(authSystem.validatePhoneNumberFormat("+1234567890"));
         
-        // Incorrect formats
+        // Incorrect formats of the phone number
         assertFalse(authSystem.validatePhoneNumberFormat("08966553"));     // No international code
         assertFalse(authSystem.validatePhoneNumberFormat("+123456"));      // Too short
         assertFalse(authSystem.validatePhoneNumberFormat("27831234567"));  // Missing +
