@@ -121,3 +121,6 @@ public class UserAuthenticationSystem {
         return "Username or password incorrect, please try again.";
     }
 }
+/**OpenAI. (2025). ChatGPT (Mar 14 version) [Large language model]. https://chat.openai.com/chat
+ * 
+ */
