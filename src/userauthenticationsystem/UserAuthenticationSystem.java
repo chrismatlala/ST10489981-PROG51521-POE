@@ -21,13 +21,17 @@ public class UserAuthenticationSystem {
 
 
     // Constructor
-    public UserAuthenticationSystem(String firstName, String lastName, String userName, String password, String cellNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userName = userName;
-        this.password = password;
-        this.cellNumber = cellNumber;
+  public UserAuthenticationSystem(String firstName, String lastName, String userName, String password, String cellNumber) {
+    if (firstName == null || lastName == null || userName == null || password == null) {
+        throw new IllegalArgumentException("Constructor arguments cannot be null.");
     }
+
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.userName = userName;
+    this.password = password;
+    this.cellNumber = cellNumber;
+}
 
     // Main method to run the program
     public static void main(String[] args) {

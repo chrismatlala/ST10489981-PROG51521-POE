@@ -11,6 +11,10 @@ public class Login extends UserAuthenticationSystem {
     private String firstName;
     private String lastName;
 
+    public Login(String firstName, String lastName, String cellNumber, String userName, String password) {
+        super(firstName, lastName, cellNumber, userName, password);
+    }
+
     // Check if username meets requirements
     public boolean checkUsernameFormat(String username) {
         return username.length() <= 5 && username.contains("_");
