@@ -4,7 +4,7 @@
  */
 package userauthenticationsystem;
 
-import userauthenticationsystem.Message;
+import userauthenticationsystem.userNameFormat;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -13,18 +13,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  *
  * @author chris
  */
-public class MessageTest {
-    Message message = new Message();
+public class userNameFormatTest {
+    userNameFormat username = new userNameFormat();
     
-    public MessageTest() {
+    public userNameFormatTest() {
     }
 
     @Test
-    public void testGetMessage() {
-        String expected = "I have arrived";
-        String actual = message.returnMessage;
+    public void testcheckUsernameFormat() {
         
-        assertEquals(expected,actual);
+        boolean actual = username.checkuserNameFormat();
+        
     }
     
 }

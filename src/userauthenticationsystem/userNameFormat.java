@@ -8,12 +8,12 @@ package userauthenticationsystem;
  *
  * @author chris
  */
-public class Message {
+public class userNameFormat {
     
-    String returnMessage = "I have arrived";
+    String username;
     
-    public String getMessage(){
-        return returnMessage;
+    public boolean checkuserNameFormat(){
+        return username.length() <= 5 && username.contains("_");
     }
     
 }

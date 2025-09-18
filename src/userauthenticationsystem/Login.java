@@ -1,9 +1,9 @@
 
 package userauthenticationsystem;
 
-
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
 
 public class Login {
     private String userName;
@@ -12,7 +12,7 @@ public class Login {
     private String firstName;
     private String lastName;
     
-   // Check if username meets requirements
+    // Check if username meets requirements
     public boolean checkUsernameFormat(String username) {
         return username.length() <= 5 && username.contains("_");
     }
@@ -76,6 +76,8 @@ public class Login {
         return "Username or password incorrect, please try again.";
     }
 }
-/**OpenAI. (2023). ChatGPT (Mar 14 version) [Large language model]. https://chat.openai.com/chat
+/**OpenAI. (2025). ChatGPT (Mar 14 version) [Large language model]. https://chat.openai.com/chat
  * 
  */
+    
+
