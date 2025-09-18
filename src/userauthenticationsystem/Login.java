@@ -1,17 +1,16 @@
-
 package userauthenticationsystem;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-
-public class Login {
+// Correct class declaration and inheritance
+public class Login extends UserAuthenticationSystem {
     private String userName;
     private String password;
     private String cellNumber;
     private String firstName;
     private String lastName;
-    
+
     // Check if username meets requirements
     public boolean checkUsernameFormat(String username) {
         return username.length() <= 5 && username.contains("_");
@@ -76,6 +75,7 @@ public class Login {
         return "Username or password incorrect, please try again.";
     }
 }
+
 /**OpenAI. (2025). ChatGPT (Mar 14 version) [Large language model]. https://chat.openai.com/chat
  * 
  */
