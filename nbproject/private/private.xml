@@ -4,15 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/UserAuthenticationSystem.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/userNameFormat.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/LoginTest.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/userNameFormatTest.java</file>
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/Login.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/PasswordComplexity.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/PasswordComplexityTest.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/CellPhoneNumber.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/CellPhoneNumberTest.java</file>
-            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/RegisterUser.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/LoginTest.java</file>
         </group>
     </open-files>
 </project-private>
