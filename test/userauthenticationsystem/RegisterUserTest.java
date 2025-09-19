@@ -11,33 +11,13 @@ import static org.junit.Assert.*;
  *
  * @author chris
  */
-public class LoginTest {
+public class RegisterUserTest {
     
-    public LoginTest() {
-    }
-
-    @Test
-    public void testCheckUsernameFormat() {
-    }
-
-    @Test
-    public void testCheckPasswordComplexity() {
-    }
-
-    @Test
-    public void testCheckCellPhoneNumberFormat() {
+    public RegisterUserTest() {
     }
 
     @Test
     public void testRegisterNewUser() {
-    }
-
-    @Test
-    public void testLoginUser() {
-    }
-
-    @Test
-    public void testGetLoginStatusMessage() {
     }
     
 }

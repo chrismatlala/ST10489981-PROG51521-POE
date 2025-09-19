@@ -67,7 +67,7 @@ public class Login extends UserAuthenticationSystem {
     }
 
     // Verify login credentials
-    public boolean authenticateUser(String enteredUsername, String enteredPassword) {
+    public boolean loginUser(String enteredUsername, String enteredPassword) {
         return enteredUsername.equals(this.userName) && enteredPassword.equals(this.password);
     }
 
