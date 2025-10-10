@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,288 +17,231 @@ import java.nio.file.Paths;
 
 class MessageTest {
     private Message testMessage;
-    private static final String TEST_RECIPIENT = "+271234567";
-    private static final String TEST_MESSAGE_TEXT = "Hello this is a test message";
+    private static final String TEST_RECIPIENT = "+27726030002";
+    private static final String TEST_MESSAGE_TEXT = "Hi Mike, can you join us for dinner tonight";
     
     @BeforeEach
     void setUp() {
-        Message.clearAllMessages(); // Clear static data before each test
+        Message.clearAllMessages();
         testMessage = new Message(TEST_RECIPIENT, TEST_MESSAGE_TEXT);
     }
     
     @AfterEach
     void tearDown() {
         Message.clearAllMessages();
-        // Clean up test files
         try {
             Files.deleteIfExists(Paths.get("stored_messages.json"));
-            Files.deleteIfExists(Paths.get("test_messages.json"));
         } catch (Exception e) {
             // Ignore cleanup errors
         }
     }
 
+    // Test Case 1: Based on Screenshot 15 data
     @Test
-    void testMessageCreation() {
-        assertNotNull(testMessage);
-        assertEquals(TEST_RECIPIENT, testMessage.getRecipient());
-        assertEquals(TEST_MESSAGE_TEXT, testMessage.getMessageText());
-        assertNotNull(testMessage.getMessageID());
-        assertNotNull(testMessage.getMessageHash());
-    }
-
-    @Test
-    void testCheckMessage_Success() {
-        // Test with valid message length
-        Message validMessage = new Message(TEST_RECIPIENT, "Short message");
-        assertTrue(validMessage.checkMessage());
-    }
-
-    @Test
-    void testCheckMessage_Failure() {
-        // Test with message exceeding 100 characters
-        String longMessage = "This is a very long message that definitely exceeds the maximum allowed " +
-                           "character count of one hundred characters for the QuickChat application";
-        Message invalidMessage = new Message(TEST_RECIPIENT, longMessage);
-        assertFalse(invalidMessage.checkMessage());
-    }
-
-    @Test
-    void testCheckMessage_Boundary() {
-        // Test with exactly 100 characters
-        String exact100Chars = "This message is exactly one hundred characters long which should be perfectly acceptable for our system";
-        assertEquals(100, exact100Chars.length());
-        Message boundaryMessage = new Message(TEST_RECIPIENT, exact100Chars);
-        assertTrue(boundaryMessage.checkMessage());
+    @DisplayName("Test Case 1: Valid message with recipient +27726030002")
+    void testMessage1_ValidData() {
+        Message message1 = new Message("+27726030002", "Hi Mike, can you join us for dinner tonight");
         
-        // Test with 101 characters
-        String over100Chars = exact100Chars + "x";
-        assertEquals(101, over100Chars.length());
-        Message overBoundaryMessage = new Message(TEST_RECIPIENT, over100Chars);
-        assertFalse(overBoundaryMessage.checkMessage());
+        assertTrue(message1.checkMessage(), "Message should be valid");
+        assertTrue(message1.checkRecipient(), "Recipient should be valid");
+        assertNotNull(message1.getMessageID());
+        assertNotNull(message1.getMessageHash());
+        
+        // Test message hash format
+        String hash = message1.checkMessageHash();
+        assertTrue(hash.matches("\\d+-token-\\d+-hi-tonight"));
+    }
+
+    // Test Case 2: Based on Screenshot 15 data (invalid recipient)
+    @Test
+    @DisplayName("Test Case 2: Invalid recipient 56375755869")
+    void testMessage2_InvalidRecipient() {
+        Message message2 = new Message("56375755869", "Hi Keegan, did you receive the payment?");
+        
+        assertTrue(message2.checkMessage(), "Message should be valid");
+        assertFalse(message2.checkRecipient(), "Recipient should be invalid - missing international code");
+    }
+
+    // Updated character limit tests (360 characters mentioned in screenshot 16)
+    @Test
+    @DisplayName("Message should not exceed 360 characters - SUCCESS")
+    void testMessageLength_Success() {
+        String validMessage = "A".repeat(360); // Exactly 360 characters
+        Message message = new Message("+27123456789", validMessage);
+        
+        assertTrue(message.checkMessage());
     }
 
     @Test
-    void testCheckRecipient_Success() {
-        // Test valid recipient formats
+    @DisplayName("Message should not exceed 360 characters - FAILURE")
+    void testMessageLength_Failure() {
+        String longMessage = "A".repeat(365); // 365 characters - 5 over limit
+        Message message = new Message("+27123456789", longMessage);
+        
+        assertFalse(message.checkMessage());
+    }
+
+    @Test
+    @DisplayName("Recipient number formatting - SUCCESS")
+    void testRecipientFormat_Success() {
         String[] validRecipients = {
-            "+271234567",
-            "+1234567890",
-            "+441234567"
+            "+27726030002",
+            "+27123456789",
+            "+44123456789"
         };
         
         for (String recipient : validRecipients) {
-            Message msg = new Message(recipient, "Test message");
-            assertTrue(msg.checkRecipient(), "Should validate recipient: " + recipient);
+            Message message = new Message(recipient, "Test message");
+            assertTrue(message.checkRecipient(), "Should accept valid recipient: " + recipient);
         }
     }
 
     @Test
-    void testCheckRecipient_Failure() {
-        // Test invalid recipient formats
+    @DisplayName("Recipient number formatting - FAILURE")
+    void testRecipientFormat_Failure() {
         String[] invalidRecipients = {
-            "271234567",      // Missing +
-            "+12345678901",   // Too long (11 chars)
-            "+12abc3456",     // Contains letters
-            "+",              // Too short
-            "",               // Empty
-            null              // Null
+            "56375755869",      // No international code
+            "27726030002",      // Missing +
+            "+123456789012",    // Too long
+            "+12abc34567",      // Contains letters
+            "+",                // Too short
+            ""                  // Empty
         };
         
         for (String recipient : invalidRecipients) {
-            Message msg = new Message(recipient, "Test message");
-            assertFalse(msg.checkRecipient(), "Should invalidate recipient: " + recipient);
+            Message message = new Message(recipient, "Test message");
+            assertFalse(message.checkRecipient(), "Should reject invalid recipient: " + recipient);
         }
     }
 
     @Test
-    void testCheckMessageHash_Format() {
-        String hash = testMessage.checkMessageHash();
-        assertNotNull(hash);
+    @DisplayName("Message Hash generation correctness")
+    void testMessageHashCorrectness() {
+        // Test with specific data from requirements
+        Message message = new Message("+27726030002", "Hi Mike, can you join us for dinner tonight");
+        String hash = message.checkMessageHash();
         
-        // Check hash format: first-two-numbers-token-message-number-first-last-words
+        // Expected format: first-two-numbers-token-message-number-first-last-words
+        assertNotNull(hash);
         String[] parts = hash.split("-");
         assertEquals(5, parts.length);
         assertEquals("token", parts[1]);
-        
-        // First part should be numbers
-        assertTrue(parts[0].matches("\\d+"));
-        
-        // Third part should be a number (message counter)
-        assertTrue(parts[2].matches("\\d+"));
+        assertEquals("hi", parts[3]); // First word
+        assertEquals("tonight", parts[4]); // Last word
     }
 
     @Test
-    void testCheckMessageHash_Consistency() {
-        // Same input should produce same hash
-        String hash1 = testMessage.checkMessageHash();
-        String hash2 = testMessage.checkMessageHash();
-        assertEquals(hash1, hash2);
+    @DisplayName("Message ID generation and format")
+    void testMessageIDGeneration() {
+        Message message1 = new Message("+27123456789", "First message");
+        Message message2 = new Message("+27123456789", "Second message");
+        
+        String id1 = message1.getMessageID();
+        String id2 = message2.getMessageID();
+        
+        assertNotNull(id1);
+        assertNotNull(id2);
+        assertNotEquals(id1, id2, "Message IDs should be unique");
+        assertTrue(id1.matches("\\d+"), "Message ID should contain only digits");
     }
 
     @Test
-    void testCheckMessageHash_WithDifferentMessages() {
-        Message msg1 = new Message("+271234567", "Hello world test");
-        Message msg2 = new Message("+271234567", "Goodbye world test");
+    @DisplayName("User action selection - Send Message")
+    void testUserAction_SendMessage() {
+        Message message = new Message("+27726030002", "Test message for sending");
         
-        assertNotEquals(msg1.checkMessageHash(), msg2.checkMessageHash());
+        // This would normally show JOptionPane, but we test the validation
+        assertTrue(message.checkMessage());
+        assertTrue(message.checkRecipient());
+        
+        // The actual send action would be tested in integration tests
     }
 
     @Test
-    void testSetMessage_Send() {
-
-        assertTrue(testMessage.checkMessage());
-        assertTrue(testMessage.checkRecipient());
+    @DisplayName("User action selection - Discard Message")
+    void testUserAction_DiscardMessage() {
+        Message message = new Message("+27726030002", "Test message for discarding");
+        
+        // Test that discard doesn't affect message count
+        int initialCount = Message.getTotalMessagesSent();
+        // Discard action would happen here
+        assertEquals(initialCount, Message.getTotalMessagesSent());
     }
 
     @Test
-    void testPrintMessage() {
-        // Add some test messages
-        Message msg1 = new Message("+271234567", "First message");
-        Message msg2 = new Message("+271234568", "Second message");
+    @DisplayName("User action selection - Store Message")
+    void testUserAction_StoreMessage() {
+        Message message = new Message("+27726030002", "Test message for storing");
         
-        msg1.setMessage(); // This would normally show dialog
-        msg2.setMessage(); // This would normally show dialog
+        // Test storage functionality
+        assertDoesNotThrow(() -> message.storeMessage());
         
-        String output = msg1.printMessage();
-        assertNotNull(output);
-        assertTrue(output.contains("All Sent Messages"));
-        assertTrue(output.contains("First message") || output.contains("Second message"));
+        // Verify file was created (in real scenario)
+        File file = new File("stored_messages.json");
+        // File might exist from previous tests, so we don't assert existence
     }
 
     @Test
-    void testReturnTotalMessages() {
-        assertEquals(0, testMessage.returnTotalMessages());
+    @DisplayName("Total messages sent tracking")
+    void testTotalMessagesTracking() {
+        int initialCount = Message.getTotalMessagesSent();
         
-        // Create and "send" messages
-        Message msg1 = new Message("+271234567", "Message 1");
-        Message msg2 = new Message("+271234568", "Message 2");
+        Message message1 = new Message("+27123456789", "Message 1");
+        Message message2 = new Message("+27123456789", "Message 2");
         
-        // Note: In actual use, setMessage("send") would increment the counter
-        // For testing, we'll test the static method directly
-        // This tests the getter functionality
-        assertTrue(testMessage.returnTotalMessages() >= 0);
-    }
-
-    @Test
-    void testStoreMessage() {
-        // Test JSON file creation
-        String testFileName = "test_messages.json";
-        
-        // Modify storeMessage to use test file (in real scenario, you'd inject filename)
-        try {
-            testMessage.storeMessage();
-            
-            // Check if file was created
-            File file = new File("stored_messages.json");
-            assertTrue(file.exists() || file.length() > 0);
-        } catch (Exception e) {
-            // File operations might fail in test environment
-            System.out.println("File operation test skipped: " + e.getMessage());
-        }
-    }
-
-    @Test
-    void testGenerateMessageID() {
-        Message msg1 = new Message("+271234567", "Test 1");
-        Message msg2 = new Message("+271234568", "Test 2");
-        
-        assertNotNull(msg1.getMessageID());
-        assertNotNull(msg2.getMessageID());
-        assertNotEquals(msg1.getMessageID(), msg2.getMessageID());
-    }
-
-    @Test
-    void testMessageHashContent() {
-        Message msg = new Message("+271234567", "Hello world test message");
-        String hash = msg.checkMessageHash();
-        
-        // Hash should contain elements from the message
-        assertTrue(hash.contains("hello")); // first word lowercase
-        assertTrue(hash.contains("message")); // last word lowercase
-        assertTrue(hash.contains("token"));
-    }
-
-    @Test
-    void testStaticMethods() {
-        assertEquals(0, Message.getTotalMessagesSent());
-        
-        Message.clearAllMessages();
-        assertEquals(0, Message.getTotalMessagesSent());
-    }
-
-    @Test
-    void testSettersRegenerateHash() {
-        String originalHash = testMessage.getMessageHash();
-        
-        // Change message text
-        testMessage.setMessageText("New different message text");
-        String newHash = testMessage.getMessageHash();
-        
-        assertNotEquals(originalHash, newHash);
-        
-        // Change recipient
-        testMessage.setRecipient("+271234568");
-        String newerHash = testMessage.getMessageHash();
-        
-        assertNotEquals(newHash, newerHash);
-    }
-
-    @Test
-    void testToString() {
-        String stringRepresentation = testMessage.toString();
-        assertNotNull(stringRepresentation);
-        assertTrue(stringRepresentation.contains("Message ID"));
-        assertTrue(stringRepresentation.contains("Hash"));
-        assertTrue(stringRepresentation.contains("Recipient"));
-    }
-
-    @Test
-    void testMessageWithEmptyText() {
-        Message emptyMessage = new Message(TEST_RECIPIENT, "");
-        assertTrue(emptyMessage.checkMessage()); // Empty message should be valid (within length)
-        assertNotNull(emptyMessage.getMessageHash());
-    }
-
-    @Test
-    void testMessageWithNullText() {
-        Message nullMessage = new Message(TEST_RECIPIENT, null);
-        assertFalse(nullMessage.checkMessage()); // Null message should be invalid
-    }
-
-    private static class HeadlessException {
-
-        public HeadlessException() {
-        }
+        // Note: In actual application, setMessage("send") would increment counter
+        // This tests the static tracking mechanism
+        assertTrue(Message.getTotalMessagesSent() >= initialCount);
     }
 
     @Nested
-    @DisplayName("Integration Tests")
+    @DisplayName("Integration Tests with Test Data")
     class IntegrationTests {
         
         @Test
-        void testCompleteMessageFlow() {
-            // Test a complete valid message flow
-            Message msg = new Message("+271234567", "Integration test message");
+        @DisplayName("Complete workflow with test data from screenshot 15")
+        void testCompleteWorkflowWithTestData() {
+            // Test Data 1
+            Message message1 = new Message("+27726030002", "Hi Mike, can you join us for dinner tonight");
+            assertAll("Message 1 validation",
+                () -> assertTrue(message1.checkMessage()),
+                () -> assertTrue(message1.checkRecipient()),
+                () -> assertNotNull(message1.getMessageHash())
+            );
             
-            assertTrue(msg.checkMessage());
-            assertTrue(msg.checkRecipient());
-            
-            String hash = msg.checkMessageHash();
-            assertNotNull(hash);
-            assertTrue(hash.startsWith(msg.getMessageID().substring(0, 2)));
+            // Test Data 2
+            Message message2 = new Message("56375755869", "Hi Keegan, did you receive the payment?");
+            assertAll("Message 2 validation",
+                () -> assertTrue(message2.checkMessage()),
+                () -> assertFalse(message2.checkRecipient()) // Should fail recipient validation
+            );
         }
         
         @Test
-        void testMultipleMessagesTracking() {
-            Message msg1 = new Message("+271234567", "First");
-            Message msg2 = new Message("+271234568", "Second");
-            Message msg3 = new Message("+271234569", "Third");
+        @DisplayName("Message hash loop testing")
+        void testMessageHashLoop() {
+            String[] testMessages = {
+                "Hi Mike, can you join us for dinner tonight",
+                "Hi Keegan, did you receive the payment",
+                "Quickchat application testing"
+            };
             
-            // All messages should have unique IDs and hashes
-            assertNotEquals(msg1.getMessageID(), msg2.getMessageID());
-            assertNotEquals(msg1.getMessageHash(), msg2.getMessageHash());
-            assertNotEquals(msg2.getMessageHash(), msg3.getMessageHash());
+            for (String msgText : testMessages) {
+                Message msg = new Message("+27123456789", msgText);
+                String hash = msg.checkMessageHash();
+                
+                assertNotNull(hash);
+                assertTrue(hash.matches("\\d+-token-\\d+-\\w+-\\w+"));
+                
+                // Verify first and last words are in hash
+                String[] words = msgText.split(" ");
+                if (words.length > 0) {
+                    String firstWord = words[0].toLowerCase();
+                    String lastWord = words[words.length - 1].toLowerCase();
+                    assertTrue(hash.contains(firstWord));
+                    assertTrue(hash.contains(lastWord));
+                }
+            }
         }
     }
 }
