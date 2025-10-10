@@ -140,7 +140,7 @@ public class UserAuthenticationSystem {
 
     public void startApplication(Scanner inputScanner) {
         System.out.println("\n" + "=".repeat(50));
-        System.out.println("           WELCOME TO QUICK CHAT");
+        System.out.println("           WELCOME TO QUICKCHAT");
         System.out.println("=".repeat(50));
 
         boolean running = true;
@@ -170,7 +170,7 @@ public class UserAuthenticationSystem {
                         System.out.println(getLoginStatusMessage(loginSuccess));
                         break;
                     case "3":
-                        System.out.println("\nThank you for using Quick Chat. Goodbye!");
+                        System.out.println("\nThank you for using QuickChat. Goodbye!");
                         running = false;
                         break;
                     default:
@@ -203,7 +203,7 @@ public class UserAuthenticationSystem {
                             showRecentMessages();
                             break;
                         case "3":
-                            System.out.println("\nThank you for using Quick Chat. Goodbye!");
+                            System.out.println("\nThank you for using QuickChat. Goodbye!");
                             running = false;
                             inChatMenu = false;
                             break;
