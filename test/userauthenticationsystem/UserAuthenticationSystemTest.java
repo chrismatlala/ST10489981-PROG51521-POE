@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
  *
  * @author chris
  */
-public class UserAuthenticationSystemIT {
+public class UserAuthenticationSystemTest {
     
-    public UserAuthenticationSystemIT() {
+    public UserAuthenticationSystemTest() {
     }
 
     @Test
