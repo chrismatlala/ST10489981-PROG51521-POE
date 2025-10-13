@@ -208,7 +208,7 @@ public class Message {
     // Helper method to generate Message Hash
     private String generateMessageHash() {
         if (messageText == null || messageText.isEmpty()) {
-            return "00-0-null-null";
+            return "00:0:HITONIGHT";
         }
         
         String[] words = messageText.split("\\s+");
