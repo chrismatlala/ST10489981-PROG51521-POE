@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class UserAuthenticationSystem {
     private String userName;
@@ -29,6 +30,9 @@ public class UserAuthenticationSystem {
         this.registeredUsers = new ArrayList<>();
         this.messageLimit = 0;
         this.totalMessagesSent = 0;
+        
+        // Add some sample users for testing
+        initializeSampleUsers();
     }
 
     // Parameterized Constructor
@@ -47,7 +51,17 @@ public class UserAuthenticationSystem {
         this.registeredUsers = new ArrayList<>();
         this.messageLimit = 0;
         this.totalMessagesSent = 0;
-    } // Fixed: Added missing closing brace
+        
+        initializeSampleUsers();
+    }
+
+    private void initializeSampleUsers() {
+        // Add some sample users for testing
+        registeredUsers.add(new User("Mike", "Johnson", "mike_j", "Password123!", "+27726030002"));
+        registeredUsers.add(new User("Sarah", "Williams", "sarah", "SecurePass1!", "+27731234567"));
+        registeredUsers.add(new User("David", "Brown", "dave_b", "MyPass123!", "+27829876543"));
+        registeredUsers.add(new User("Emily", "Davis", "em_d", "Emily123!", "+27655321478"));
+    }
 
     public boolean loginUser(String enteredUsername, String enteredPassword) {
         boolean success = enteredUsername.equals(this.userName) && enteredPassword.equals(this.password);
@@ -57,28 +71,45 @@ public class UserAuthenticationSystem {
 
     public void logout() {
         this.loggedIn = false;
-        System.out.println("You have been logged out successfully.");
+        JOptionPane.showMessageDialog(null, "You have been logged out successfully.", "Logout", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public boolean isLoggedIn() {
         return loggedIn;
     }
 
-    public void setMessageLimit(Scanner inputScanner) {
-        System.out.println("\n=== Message Setup ===");
-        System.out.print("How many messages do you wish to enter? ");
+    public void setMessageLimit() {
+        String input = JOptionPane.showInputDialog(null,
+            "How many messages do you wish to enter?",
+            "Message Setup",
+            JOptionPane.QUESTION_MESSAGE);
+
+        if (input == null) {
+            // User cancelled, set default
+            this.messageLimit = 5;
+            return;
+        }
 
         try {
-            int limit = Integer.parseInt(inputScanner.nextLine().trim());
+            int limit = Integer.parseInt(input.trim());
             if (limit <= 0) {
-                System.out.println("Message limit must be a positive number. Setting default to 5.");
+                JOptionPane.showMessageDialog(null, 
+                    "Message limit must be a positive number. Setting default to 5.",
+                    "Invalid Input",
+                    JOptionPane.WARNING_MESSAGE);
                 this.messageLimit = 5;
             } else {
                 this.messageLimit = limit;
-                System.out.println("Message limit set to: " + limit);
+                JOptionPane.showMessageDialog(null, 
+                    "Message limit set to: " + limit,
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid number. Setting default to 5.");
+            JOptionPane.showMessageDialog(null, 
+                "Invalid input. Please enter a valid number. Setting default to 5.",
+                "Invalid Input",
+                JOptionPane.ERROR_MESSAGE);
             this.messageLimit = 5;
         }
     }
@@ -89,40 +120,80 @@ public class UserAuthenticationSystem {
                 .count();
     }
 
-    // Handle user registration process
-    public String registerNewUser(Scanner inputScanner) {
-        System.out.print("Enter your first name: ");
-        this.firstName = inputScanner.nextLine();
+    // Handle user registration process using JOptionPane
+    public String registerNewUser() {
+        // First Name
+        String firstName = JOptionPane.showInputDialog(null,
+            "Enter your first name:",
+            "User Registration - First Name",
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (firstName == null || firstName.trim().isEmpty()) {
+            return "Registration cancelled. First name is required.";
+        }
+        this.firstName = firstName.trim();
 
-        System.out.print("Enter your last name: ");
-        this.lastName = inputScanner.nextLine();
+        // Last Name
+        String lastName = JOptionPane.showInputDialog(null,
+            "Enter your last name:",
+            "User Registration - Last Name",
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (lastName == null || lastName.trim().isEmpty()) {
+            return "Registration cancelled. Last name is required.";
+        }
+        this.lastName = lastName.trim();
 
-        System.out.print("Enter username (must contain _ and be ≤5 characters): ");
-        String username = inputScanner.nextLine();
+        // Username
+        String username = JOptionPane.showInputDialog(null,
+            "Enter username (must contain _ and be ≤5 characters):",
+            "User Registration - Username",
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (username == null || username.trim().isEmpty()) {
+            return "Registration cancelled. Username is required.";
+        }
+        
         if (!checkUsernameFormat(username)) {
             return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than five characters in length.";
         }
-        this.userName = username;
+        this.userName = username.trim();
 
-        System.out.print("Enter password (≥8 chars, with capital, number, special char): ");
-        String password = inputScanner.nextLine();
+        // Password
+        String password = JOptionPane.showInputDialog(null,
+            "Enter password (≥8 chars, with capital, number, special char):",
+            "User Registration - Password",
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (password == null || password.trim().isEmpty()) {
+            return "Registration cancelled. Password is required.";
+        }
+        
         if (!checkPasswordComplexity(password)) {
             return "Password is not correctly formatted, please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.";
         }
-        this.password = password;
+        this.password = password.trim();
 
-        System.out.print("Enter cell phone number (with international code, e.g., +27831234567): ");
-        String cellNumber = inputScanner.nextLine();
+        // Cell Phone Number
+        String cellNumber = JOptionPane.showInputDialog(null,
+            "Enter cell phone number (with international code, e.g., +27831234567):",
+            "User Registration - Cell Number",
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (cellNumber == null || cellNumber.trim().isEmpty()) {
+            return "Registration cancelled. Cell phone number is required.";
+        }
+        
         if (!checkCellPhoneNumberFormat(cellNumber)) {
             return "Cell phone number incorrectly formatted or does not contain international code.";
         }
-        this.cellNumber = cellNumber;
+        this.cellNumber = cellNumber.trim();
 
         // Add the registered user to the list
         User newUser = new User(firstName, lastName, userName, password, cellNumber);
         registeredUsers.add(newUser);
 
-        return "Registration successful!";
+        return "Registration successful! Welcome " + firstName + " " + lastName + "!";
     }
 
     // Verify login credentials
@@ -133,175 +204,308 @@ public class UserAuthenticationSystem {
     // Return appropriate login status message
     public String getLoginStatusMessage(boolean isSuccessful) {
         if (isSuccessful) {
-            return "Welcome " + firstName + ", " + lastName + " it is great to see you again.";
+            return "Welcome " + firstName + " " + lastName + ", it is great to see you again.";
         }
         return "Username or password incorrect, please try again.";
     }
 
-    public void startApplication(Scanner inputScanner) {
-        System.out.println("\n" + "=".repeat(50));
-        System.out.println("           WELCOME TO QUICKCHAT");
-        System.out.println("=".repeat(50));
+    public void startApplication() {
+        JOptionPane.showMessageDialog(null,
+            "WELCOME TO QUICKCHAT\n" +
+            "===================\n\n" +
+            "Your secure messaging platform",
+            "QuickChat Welcome",
+            JOptionPane.INFORMATION_MESSAGE);
 
         boolean running = true;
 
         while (running) {
             if (!loggedIn) {
-                System.out.println("\n=== Main Menu ===");
-                System.out.println("1. Register");
-                System.out.println("2. Login");
-                System.out.println("3. Quit");
-                System.out.print("Choose an option: ");
+                // Main Menu
+                String[] mainMenuOptions = {"Register", "Login", "Quit"};
+                int mainChoice = JOptionPane.showOptionDialog(null,
+                    "=== MAIN MENU ===\n\n" +
+                    "Please choose an option:",
+                    "QuickChat Main Menu",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    mainMenuOptions,
+                    mainMenuOptions[0]);
 
-                String choice = inputScanner.nextLine().trim();
-
-                switch (choice) {
-                    case "1":
-                        String registerResult = registerNewUser(inputScanner);
-                        System.out.println(registerResult);
+                switch (mainChoice) {
+                    case 0: // Register
+                        String registerResult = registerNewUser();
+                        JOptionPane.showMessageDialog(null, registerResult, 
+                            "Registration Result", 
+                            registerResult.contains("successful") ? 
+                                JOptionPane.INFORMATION_MESSAGE : 
+                                JOptionPane.ERROR_MESSAGE);
                         break;
-                    case "2":
-                        System.out.print("Enter username: ");
-                        String loginUsername = inputScanner.nextLine();
-                        System.out.print("Enter password: ");
-                        String loginPassword = inputScanner.nextLine();
-
-                        boolean loginSuccess = loginUser(loginUsername, loginPassword);
-                        System.out.println(getLoginStatusMessage(loginSuccess));
+                    case 1: // Login
+                        String loginUsername = JOptionPane.showInputDialog(null,
+                            "Enter your username:",
+                            "Login",
+                            JOptionPane.QUESTION_MESSAGE);
+                        
+                        if (loginUsername == null) {
+                            break; // User cancelled
+                        }
+                        
+                        String loginPassword = JOptionPane.showInputDialog(null,
+                            "Enter your password:",
+                            "Login",
+                            JOptionPane.QUESTION_MESSAGE);
+                        
+                        if (loginPassword == null) {
+                            break; // User cancelled
+                        }
+                        
+                        boolean loginSuccess = loginUser(loginUsername.trim(), loginPassword.trim());
+                        String loginMessage = getLoginStatusMessage(loginSuccess);
+                        JOptionPane.showMessageDialog(null, loginMessage,
+                            "Login Result",
+                            loginSuccess ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
                         break;
-                    case "3":
-                        System.out.println("\nThank you for using QuickChat. Goodbye!");
+                    case 2: // Quit
+                        int confirmQuit = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to quit QuickChat?",
+                            "Confirm Quit",
+                            JOptionPane.YES_NO_OPTION);
+                        
+                        if (confirmQuit == JOptionPane.YES_OPTION) {
+                            JOptionPane.showMessageDialog(null,
+                                "Thank you for using QuickChat. Goodbye!",
+                                "Goodbye",
+                                JOptionPane.INFORMATION_MESSAGE);
+                            running = false;
+                        }
+                        break;
+                    default: // Closed dialog
                         running = false;
                         break;
-                    default:
-                        System.out.println("Invalid option. Please try again.");
                 }
             } else {
+                // User is logged in
                 if (messageLimit <= 0) {
-                    setMessageLimit(inputScanner);
+                    setMessageLimit();
                 }
 
                 boolean inChatMenu = true;
 
                 while (inChatMenu && loggedIn) {
-                    System.out.println("\n" + "=".repeat(50));
-                    System.out.println("    Welcome to QuickChat, " + firstName + " " + lastName + "!");
-                    System.out.println("Message Limit: " + messageLimit + " | Sent: " + getSentMessageCount() + " | Remaining: " + (messageLimit - getSentMessageCount()));
-                    System.out.println("=".repeat(50));
-                    System.out.println("1. Send Messages");
-                    System.out.println("2. Show Recently Sent Messages");
-                    System.out.println("3. Quit");
-                    System.out.print("Choose an option: ");
+                    String[] chatMenuOptions = {"Send Messages", "Show Recently Sent Messages", "Logout", "Quit"};
+                    int chatChoice = JOptionPane.showOptionDialog(null,
+                        "Welcome to QuickChat, " + firstName + " " + lastName + "!\n\n" +
+                        "Message Limit: " + messageLimit + 
+                        " | Sent: " + getSentMessageCount() + 
+                        " | Remaining: " + (messageLimit - getSentMessageCount()) + "\n\n" +
+                        "Please choose an option:",
+                        "QuickChat Dashboard",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        chatMenuOptions,
+                        chatMenuOptions[0]);
 
-                    String choice = inputScanner.nextLine().trim();
-
-                    switch (choice) {
-                        case "1":
-                            sendMessageWorkflow(inputScanner);
+                    switch (chatChoice) {
+                        case 0: // Send Messages
+                            sendMessageWorkflow();
                             break;
-                        case "2":
+                        case 1: // Show Recently Sent Messages
                             showRecentMessages();
                             break;
-                        case "3":
-                            System.out.println("\nThank you for using QuickChat. Goodbye!");
-                            running = false;
+                        case 2: // Logout
+                            logout();
                             inChatMenu = false;
                             break;
-                        default:
-                            System.out.println("Invalid option. Please try again.");
+                        case 3: // Quit
+                            int confirmQuit = JOptionPane.showConfirmDialog(null,
+                                "Are you sure you want to quit QuickChat?",
+                                "Confirm Quit",
+                                JOptionPane.YES_NO_OPTION);
+                            
+                            if (confirmQuit == JOptionPane.YES_OPTION) {
+                                JOptionPane.showMessageDialog(null,
+                                    "Thank you for using QuickChat. Goodbye!",
+                                    "Goodbye",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                                running = false;
+                                inChatMenu = false;
+                            }
+                            break;
+                        default: // Closed dialog
+                            inChatMenu = false;
+                            running = false;
+                            break;
                     }
                 }
             }
         }
     }
 
-    private void sendMessageWorkflow(Scanner inputScanner) {
+    private void sendMessageWorkflow() {
         if (getSentMessageCount() >= messageLimit) {
-            System.out.println("You have reached your message limit of " + messageLimit + " messages.");
+            JOptionPane.showMessageDialog(null,
+                "You have reached your message limit of " + messageLimit + " messages.",
+                "Message Limit Reached",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        System.out.println("\nAvailable users:");
+        // Show available users
+        StringBuilder usersList = new StringBuilder();
+        usersList.append("Available Users:\n\n");
         for (int i = 0; i < registeredUsers.size(); i++) {
             User user = registeredUsers.get(i);
             if (!user.getUserName().equals(this.userName)) {
-                System.out.printf("%d. %s (%s)%n", i + 1, user.getFullName(), user.getUserName());
+                usersList.append((i + 1)).append(". ").append(user.getFullName())
+                         .append(" (").append(user.getUserName()).append(")\n");
             }
         }
 
-        System.out.print("Enter recipient username: ");
-        String recipient = inputScanner.nextLine().trim();
+        String recipient = JOptionPane.showInputDialog(null,
+            usersList.toString() + "\nEnter recipient username:",
+            "Select Recipient",
+            JOptionPane.QUESTION_MESSAGE);
 
-        User recipientUser = findUserByUsername(recipient);
+        if (recipient == null || recipient.trim().isEmpty()) {
+            return; // User cancelled
+        }
+
+        User recipientUser = findUserByUsername(recipient.trim());
         if (recipientUser == null) {
-            System.out.println("Error: User '" + recipient + "' not found.");
+            JOptionPane.showMessageDialog(null,
+                "Error: User '" + recipient + "' not found.",
+                "User Not Found",
+                JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        System.out.print("Enter your message (max 250 characters): ");
-        String messageContent = inputScanner.nextLine().trim();
+        String messageContent = JOptionPane.showInputDialog(null,
+            "Enter your message for " + recipientUser.getFullName() + " (max 250 characters):",
+            "Compose Message",
+            JOptionPane.QUESTION_MESSAGE);
 
-        // Create message object
-        Message newMessage = new Message(this.userName, recipientUser.getUserName(), messageContent);
+        if (messageContent == null || messageContent.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                "Message cannot be empty.",
+                "Empty Message",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Create message object using the standalone Message class
+        Message newMessage = new Message(recipientUser.getCellNumber(), messageContent.trim());
 
         // Check message length
-        if (messageContent.length() > 250) {
-            System.out.println("Please enter a message of less than 250 characters.");
-            return;
+        if (!newMessage.checkMessageLength()) {
+            return; // Error message already shown by checkMessageLength()
         }
 
         // Check recipient number format
-        if (!checkCellPhoneNumberFormat(recipientUser.getCellNumber())) {
-            System.out.println("Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.");
-            return;
+        if (!newMessage.checkRecipientFormat()) {
+            return; // Error message already shown by checkRecipientFormat()
         }
 
-        // Display message hash
-        System.out.println("Message Hash: " + newMessage.checkMessageHash());
+        // Show message details and get user action
+        String[] messageOptions = {"Send", "Discard", "Store"};
+        int messageAction = JOptionPane.showOptionDialog(null,
+            "Message Details:\n\n" +
+            "Recipient: " + recipientUser.getFullName() + " (" + recipientUser.getCellNumber() + ")\n" +
+            "Message: " + messageContent + "\n" +
+            "Message Hash: " + newMessage.checkMessageHash() + "\n\n" +
+            "What would you like to do with this message?",
+            "Message Action",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            messageOptions,
+            messageOptions[0]);
 
-        // Ask for action
-        System.out.print("Do you want to (send/discard/store) this message? ");
-        String action = inputScanner.nextLine().trim().toLowerCase();
-
-        switch (action) {
-            case "send":
-                newMessage.markAsSent();
+        switch (messageAction) {
+            case 0: // Send
+                String sendResult = newMessage.setMessage("send");
+                if (sendResult.contains("successfully sent")) {
+                    messages.add(newMessage);
+                    totalMessagesSent++;
+                    JOptionPane.showMessageDialog(null, sendResult, "Message Sent", JOptionPane.INFORMATION_MESSAGE);
+                    displayMessageDetails(newMessage, recipientUser.getFullName());
+                } else {
+                    JOptionPane.showMessageDialog(null, sendResult, "Send Failed", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case 1: // Discard
+                int discardConfirm = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to discard this message?",
+                    "Confirm Discard",
+                    JOptionPane.YES_NO_OPTION);
+                
+                if (discardConfirm == JOptionPane.YES_OPTION) {
+                    JOptionPane.showMessageDialog(null, "Message discarded.", "Discarded", JOptionPane.INFORMATION_MESSAGE);
+                }
+                break;
+            case 2: // Store
+                newMessage.storeMessage();
                 messages.add(newMessage);
-                totalMessagesSent++;
-                System.out.println("Message successfully sent.");
-                displayMessageDetails(newMessage);
+                JOptionPane.showMessageDialog(null, "Message successfully stored.", "Stored", JOptionPane.INFORMATION_MESSAGE);
                 break;
-            case "discard":
-                System.out.println("Message discarded.");
+            default: // Cancelled
+                JOptionPane.showMessageDialog(null, "Message action cancelled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 break;
-            case "store":
-                messages.add(newMessage);
-                System.out.println("Message successfully stored.");
-                break;
-            default:
-                System.out.println("Invalid action. Message discarded.");
         }
 
-        System.out.println("Total messages sent: " + totalMessagesSent);
+        JOptionPane.showMessageDialog(null,
+            "Total messages sent: " + totalMessagesSent + "\n" +
+            "Messages remaining: " + (messageLimit - getSentMessageCount()),
+            "Message Statistics",
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void displayMessageDetails(Message message) {
-        System.out.println("\n=== Message Details ===");
-        System.out.println("Sender: " + message.getSender());
-        System.out.println("Recipient: " + message.getReceiver());
-        System.out.println("Message: " + message.getContent());
-        System.out.println("Timestamp: " + message.getTimestamp());
+    private void displayMessageDetails(Message message, String recipientName) {
+        JOptionPane.showMessageDialog(null,
+            "=== MESSAGE DETAILS ===\n\n" +
+            "Message ID: " + message.getMessageID() + "\n" +
+            "Message Hash: " + message.checkMessageHash() + "\n" +
+            "Recipient: " + recipientName + "\n" +
+            "Message: " + message.getMessageText() + "\n" +
+            "Status: Sent Successfully",
+            "Message Details",
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void showRecentMessages() {
-        System.out.println("\n=== Recently Sent Messages ===");
         if (messages.isEmpty()) {
-            System.out.println("No messages sent yet.");
-        } else {
-            for (Message msg : messages) {
-                System.out.println(msg);
+            JOptionPane.showMessageDialog(null,
+                "No messages sent yet.",
+                "Recent Messages",
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        StringBuilder recentMessages = new StringBuilder();
+        recentMessages.append("=== RECENTLY SENT MESSAGES ===\n\n");
+        
+        int count = 0;
+        for (Message msg : messages) {
+            if (msg.isSent()) {
+                count++;
+                recentMessages.append("Message ").append(count).append(":\n");
+                recentMessages.append("  ID: ").append(msg.getMessageID()).append("\n");
+                recentMessages.append("  Hash: ").append(msg.checkMessageHash()).append("\n");
+                recentMessages.append("  Content: ").append(msg.getMessageText()).append("\n");
+                recentMessages.append("------------------------\n");
             }
         }
+
+        if (count == 0) {
+            recentMessages.append("No sent messages found.");
+        }
+
+        JOptionPane.showMessageDialog(null,
+            recentMessages.toString(),
+            "Recent Messages",
+            JOptionPane.INFORMATION_MESSAGE);
     }
 
     private User findUserByUsername(String username) {
@@ -346,44 +550,7 @@ public class UserAuthenticationSystem {
     // Main method to run the program
     public static void main(String[] args) {
         UserAuthenticationSystem authSystem = new UserAuthenticationSystem();
-        Scanner inputScanner = new Scanner(System.in);
-        authSystem.startApplication(inputScanner);
-        inputScanner.close();
-    }
-
-    // Inner Message class
-    private static class Message {
-        private String sender;
-        private String receiver;
-        private String content;
-        private String timestamp;
-        private boolean sent;
-
-        public Message(String sender, String receiver, String content) {
-            this.sender = sender;
-            this.receiver = receiver;
-            this.content = content;
-            this.timestamp = java.time.LocalDateTime.now().toString();
-            this.sent = false;
-        }
-
-        public String getSender() { return sender; }
-        public String getReceiver() { return receiver; }
-        public String getContent() { return content; }
-        public String getTimestamp() { return timestamp; }
-        public boolean isSent() { return sent; }
-
-        public void markAsSent() { this.sent = true; }
-
-        public String checkMessageHash() {
-            return Integer.toHexString((sender + receiver + content + timestamp).hashCode());
-        }
-
-        @Override
-        public String toString() {
-            return String.format("[%s] From: %s → %s: %s",
-                    timestamp, sender, receiver, content);
-        }
+        authSystem.startApplication();
     }
 
     // Inner User class
@@ -406,6 +573,7 @@ public class UserAuthenticationSystem {
         public String getLastName() { return lastName; }
         public String getUserName() { return userName; }
         public String getCellNumber() { return cellNumber; }
+        public String getPassword() { return password; }
 
         public String getFullName() {
             return firstName + " " + lastName;
