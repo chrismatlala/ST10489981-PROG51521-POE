@@ -101,4 +101,10 @@ public class Message {
     AbstractStringBuilder checkMessageCount() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    private static class AbstractStringBuilder {
+
+        public AbstractStringBuilder() {
+        }
+    }
 }

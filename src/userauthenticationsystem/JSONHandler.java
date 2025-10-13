@@ -36,7 +36,7 @@ public class JSONHandler {
         StringBuilder json = new StringBuilder();
         json.append("  {\n");
         json.append("    \"messageID\": \"").append(escapeJSON(message.getMessageID())).append("\",\n");
-        json.append("    \"messageCount\": ").append(message.checkMessageCount()).append(",\n");
+        json.append("    \"messageCount\": ").append(message.getMessageCount()).append(",\n");
         json.append("    \"recipient\": \"").append(escapeJSON(message.getRecipient())).append("\",\n");
         json.append("    \"message\": \"").append(escapeJSON(message.getMessage())).append("\",\n");
         json.append("    \"messageHash\": \"").append(escapeJSON(message.getMessageHash())).append("\",\n");
