@@ -3,10 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981%20-%20Copy/src/quickchatapp/Login.java</file>
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981%20-%20Copy/src/quickchatapp/QuickChatApp.java</file>
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981%20-%20Copy/src/quickchatapp/JSONHandler.java</file>
             <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981%20-%20Copy/src/quickchatapp/Message.java</file>
+=======
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/test/userauthenticationsystem/MessageTest.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/UserAuthenticationSystem.java</file>
+            <file>file:/C:/Users/chris/Documents/NetBeansProjects/ST10489981/src/userauthenticationsystem/JSONHandler.java</file>
+>>>>>>> 7f22beef6e507f8dc2dbab47a2add68df8e3d243
         </group>
     </open-files>
 </project-private>
