@@ -1,72 +1,150 @@
 package userauthenticationsystem;
 
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.regex.Pattern;
 
 public class UserAuthenticationSystem {
-    private String userName;
+    private String username;
     private String password;
     private String cellNumber;
     private String firstName;
     private String lastName;
-    
-    //Default Constructor
-    public UserAuthenticationSystem(){
-        this.firstName = "";
-        this.lastName = "";
-        this.cellNumber = "";
-        this.userName = "";
-        this.password = "";
-    }
+    private boolean isLoggedIn = false;
 
-
-    // Constructor
-  public UserAuthenticationSystem(String firstName, String lastName, String userName, String password, String cellNumber) {
-    if (firstName == null || lastName == null || userName == null || password == null) {
-        throw new IllegalArgumentException("Constructor arguments cannot be null.");
-    }
-
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.userName = userName;
-    this.password = password;
-    this.cellNumber = cellNumber;
-}
-
-    // Main method to run the program
+    // === GUI Entry Point ===
     public static void main(String[] args) {
-        UserAuthenticationSystem authSystem = new UserAuthenticationSystem();  // uses default constructor
-        Scanner inputScanner = new Scanner(System.in);
-
-        System.out.println("=== User Registration ===");
-        String registrationResult = authSystem.registerNewUser(inputScanner);
-        System.out.println(registrationResult);
-
-        if (registrationResult.toLowerCase().contains("successful")) {
-            System.out.println("\n=== User Login ===");
-            
-            //Enter user name
-            System.out.print("Enter username: ");
-            String enteredUsername = inputScanner.nextLine();
-            
-            //Enter password
-            System.out.print("Enter password: ");
-            String enteredPassword = inputScanner.nextLine();
-
-            boolean loginSuccess = authSystem.authenticateUser(enteredUsername, enteredPassword);
-            System.out.println(authSystem.getLoginStatusMessage(loginSuccess));
-        }
-
-        inputScanner.close();
+        SwingUtilities.invokeLater(() -> {
+            UserAuthenticationSystem app = new UserAuthenticationSystem();
+            app.showMainMenu();
+        });
     }
 
+    // === GUI: Main Menu ===
+    private void showMainMenu() {
+        JFrame frame = new JFrame("QuickChat Messaging Apllication");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new BorderLayout());
 
-    // Check if username meets requirements
-    public boolean checkUsernameFormat(String username) {
+        JLabel welcomeLabel = new JLabel("Welcome to QuickChat.", SwingConstants.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        JButton sendBtn = new JButton("Send Messages");
+        JButton recentBtn = new JButton("Show Recently Sent Messages");
+        JButton storedBtn = new JButton("View Stored Messages");
+        JButton quitBtn = new JButton("Quit");
+
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        buttonPanel.add(sendBtn);
+        buttonPanel.add(recentBtn);
+        buttonPanel.add(storedBtn);
+        buttonPanel.add(quitBtn);
+
+        frame.add(welcomeLabel, BorderLayout.NORTH);
+        frame.add(buttonPanel, BorderLayout.CENTER);
+
+        // === Event Listeners ===
+        sendBtn.addActionListener(e -> sendMessagesGUI());
+        recentBtn.addActionListener(e -> JOptionPane.showMessageDialog(frame, "Coming Soon."));
+        storedBtn.addActionListener(e -> viewStoredMessagesGUI());
+        quitBtn.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "Thank you for using QuickChat. Goodbye!");
+            frame.dispose();
+        });
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    // === GUI: Send Messages ===
+    private void sendMessagesGUI() {
+        JFrame sendFrame = new JFrame("Send Message");
+        sendFrame.setSize(400, 400);
+        sendFrame.setLayout(new GridLayout(7, 1, 10, 10));
+
+        JTextField recipientField = new JTextField();
+        JTextArea messageArea = new JTextArea();
+        JButton sendBtn = new JButton("Send Message");
+        JButton storeBtn = new JButton("Store Message");
+        JButton discardBtn = new JButton("Discard Message");
+
+        sendFrame.add(new JLabel("Recipient Cell Number (with +code):"));
+        sendFrame.add(recipientField);
+        sendFrame.add(new JLabel("Message (max 250 characters):"));
+        sendFrame.add(new JScrollPane(messageArea));
+        sendFrame.add(sendBtn);
+        sendFrame.add(storeBtn);
+        sendFrame.add(discardBtn);
+
+        sendFrame.setLocationRelativeTo(null);
+        sendFrame.setVisible(true);
+
+        // Message object
+        Message message = new Message();
+
+        // === Action Listeners ===
+        sendBtn.addActionListener(e -> {
+            String recipient = recipientField.getText().trim();
+            String text = messageArea.getText().trim();
+
+            if (message.checkRecipientCell(recipient) == 0) {
+                JOptionPane.showMessageDialog(sendFrame, "Invalid phone number. Must include international code.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (text.length() > 250) {
+                JOptionPane.showMessageDialog(sendFrame, "Message exceeds 250 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            message.setRecipient(recipient);
+            message.setMessage(text);
+            String result = message.sentMessage(1); // Send
+            JOptionPane.showMessageDialog(sendFrame, result + "\n\n" + message.printMessages(), "Message Sent", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        storeBtn.addActionListener(e -> {
+            String recipient = recipientField.getText().trim();
+            String text = messageArea.getText().trim();
+
+            if (message.checkRecipientCell(recipient) == 0 || text.isEmpty()) {
+                JOptionPane.showMessageDialog(sendFrame, "Please fill in all fields correctly.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            message.setRecipient(recipient);
+            message.setMessage(text);
+            String result = message.sentMessage(3); // Store
+            JOptionPane.showMessageDialog(sendFrame, result, "Stored", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        discardBtn.addActionListener(e -> {
+            recipientField.setText("");
+            messageArea.setText("");
+            JOptionPane.showMessageDialog(sendFrame, "Message discarded.");
+        });
+    }
+
+    // === GUI: View Stored Messages ===
+    private void viewStoredMessagesGUI() {
+        JFrame viewFrame = new JFrame("Stored Messages");
+        viewFrame.setSize(400, 300);
+
+        JTextArea messagesArea = new JTextArea();
+        messagesArea.setEditable(false);
+        messagesArea.setText(JSONHandler.getAllMessages());
+
+        viewFrame.add(new JScrollPane(messagesArea));
+        viewFrame.setLocationRelativeTo(null);
+        viewFrame.setVisible(true);
+    }
+
+    // === Validation Methods ===
+    public boolean checkUsername(String username) {
         return username.length() <= 5 && username.contains("_");
     }
 
-    // Check if password meets complexity requirements
     public boolean checkPasswordComplexity(String password) {
         if (password.length() < 8) return false;
         if (!Pattern.compile("[A-Z]").matcher(password).find()) return false;
@@ -74,57 +152,20 @@ public class UserAuthenticationSystem {
         return Pattern.compile("[^A-Za-z0-9]").matcher(password).find();
     }
 
-    // Check if cell phone number is correctly formatted
-    public boolean checkCellPhoneNumberFormat(String cellNumber) {
+    public boolean checkCellPhoneNumber(String cellNumber) {
         String pattern = "^\\+\\d{1,3}\\d{7,10}$";
         return Pattern.matches(pattern, cellNumber);
     }
 
-    // Handle user registration process
-    public String registerNewUser(Scanner inputScanner) {
-        System.out.print("Enter your first name: ");
-        this.firstName = inputScanner.nextLine();
-
-        System.out.print("Enter your last name: ");
-        this.lastName = inputScanner.nextLine();
-
-        System.out.print("Enter username (must contain _ and be ≤5 characters): ");
-        String username = inputScanner.nextLine();
-        if (!checkUsernameFormat(username)) {
-            return "Username is not correctly formatted, please ensure that your username contains an underscore and is no more than five characters in length.";
-        }
-        this.userName = username;
-
-        System.out.print("Enter password (≥8 chars, with capital, number, special char): ");
-        String password = inputScanner.nextLine();
-        if (!checkPasswordComplexity(password)) {
-            return "Password is not correctly formatted, please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.";
-        }
-        this.password = password;
-
-        System.out.print("Enter cell phone number (with international code, e.g., +27831234567): ");
-        String cellNumber = inputScanner.nextLine();
-        if (!checkCellPhoneNumberFormat(cellNumber)) {
-            return "Cell phone number incorrectly formatted or does not contain international code.";
-        }
-        this.cellNumber = cellNumber;
-
-        return "Registration successful!";
+    // === Login ===
+    public boolean loginUser(String enteredUsername, String enteredPassword) {
+        return enteredUsername.equals(this.username) && enteredPassword.equals(this.password);
     }
 
-    // Verify login credentials
-    public boolean authenticateUser(String enteredUsername, String enteredPassword) {
-        return enteredUsername.equals(this.userName) && enteredPassword.equals(this.password);
-    }
-
-    // Return appropriate login status message
-    public String getLoginStatusMessage(boolean isSuccessful) {
+    public String returnLoginStatus(boolean isSuccessful) {
         if (isSuccessful) {
-            return "Welcome " + firstName + ", " + lastName + " it is great to see you again.";
+            return "Welcome " + firstName + " " + lastName + ", it is great to see you again.";
         }
         return "Username or password incorrect, please try again.";
     }
 }
-/**OpenAI. (2025). ChatGPT (Mar 14 version) [Large language model]. https://chat.openai.com/chat
- * 
- */
